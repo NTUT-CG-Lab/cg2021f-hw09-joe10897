@@ -69,6 +69,7 @@ class threejsViewer {
             this.camera.updateProjectionMatrix();
         })
 
+        let mesh = null
         this.loadData = (paddingData,size,isovalue) =>{
             let mesh = new MarchingCubes(size)
             mesh.material = new THREE.MeshLambertMaterial()
@@ -76,6 +77,10 @@ class threejsViewer {
             mesh.field = paddingData
 
             this.scene.add(mesh)
+        }
+
+        this.dowload = () => {
+            mesh.generateGemetey()
         }
 
         this.renderScene()
