@@ -207,6 +207,7 @@
     <script type="module">
 
         import { threejsViewer } from './jsm/threejsViewer.js'
+        //import {PLYExporter } from ''
         import { STLExporter } from "./threejs/examples/jsm/exporters/STLExporter.js";
 
         const fileRegex = /(\w+)_(\d+)x(\d+)x(\d+)_(\w+)\.*/;
@@ -238,7 +239,42 @@
 
             // RAW文件讀取
             elements[0].addEventListener('change', (evt) => {
+                let fr = new FileReader()
+                
+                let files = evt.target.files
+                if (files.length <=0) {
+                    return
+                }
 
+                let file = evt.target.files[0]
+
+                let filename = file.name
+
+                filename = filename.split('.')
+                let values = filename[0].split('_')
+
+                let width = values[1]
+                let height = values[2]
+                let depth = values[3]
+                let byte = values[4]
+
+                let max = Math.max(width,height,depth)
+
+                let data = null
+                let paddingData = null
+
+                fr.onload= () => {
+                    let result = fr.result
+                    if(byte == 'uint8'){
+                        data = new Uint8Array(result)
+                            //...//
+                        paddingData = new Uint8Array(max * max * max)
+
+                        modelView.loadData(paddingData,max,75)
+                    }
+                }
+
+                fr.readAsArrayBuffer(file)
             })
 
             // 模型資料下載
