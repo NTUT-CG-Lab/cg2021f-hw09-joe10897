@@ -73,14 +73,40 @@ class threejsViewer {
         this.loadData = (paddingData,size,isovalue) =>{
             let mesh = new MarchingCubes(size)
             mesh.material = new THREE.MeshLambertMaterial()
-            mesh.isolation = isovalue
-            mesh.field = paddingData
-
+            mesh.isolation = this.threshold
+            mesh.field = this.databuffer
+            //mesh.isolation = isovalue
+            //mesh.field = paddingData
             this.scene.add(mesh)
+        }
+
+        this.updateModel = () =>{
+            //geometry + meterial =>mesh
+            let mesh = this.scence.getObjecByName('mesh')
+
+            if(mesh==null){
+                //初始化
+                let mesh = new MarchingCubes(this.size)
+                mesh.name = 'mesh'
+                
+                if (this.textureOption ==0){
+                    //mesh.material = ...
+                }
+                else if (this.textureOption ==1){
+                    //mesh.material = ...
+                }
+
+                mesh.isolation = this.threshold
+                mesh.field = this.databuffer
+
+                return mesh
+            }
+            
         }
 
         this.dowload = () => {
             mesh.generateGemetey()
+            return mesh
         }
 
         this.renderScene()

@@ -279,12 +279,23 @@
 
             // 模型資料下載
             elements[1].addEventListener('click', (evt) => {
+                let exporter = new STLExporter()
+                let mesh = modelView.download()
 
+
+                
+                let dlLink = document.createElement('a')
+                dlLink.href = URL.createObjectURL(blob)
+                dlLink.download = 'model.stl'
+
+                dlLink.click()
             })
 
             // 閥值設定
             elements[2].addEventListener('click', (evt) => {
-
+                let isovalue = evt.srcElement.value
+                modelView.threshold = isovalue
+                model
             })
 
             // 紋理設置
