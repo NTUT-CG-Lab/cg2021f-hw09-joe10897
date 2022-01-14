@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <html>
+
 <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0'>
@@ -12,7 +13,7 @@
             width: 100%;
             display: flex;
             color: white;
-            margin-top:10px;
+            margin-top: 10px;
         }
 
         .labelInput {
@@ -23,7 +24,7 @@
         .frostedGlass {
             border-radius: 20px;
             overflow: hidden;
-            background-color: rgba(0,0,0,0.8);
+            background-color: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(5px)
         }
 
@@ -32,8 +33,8 @@
             padding: 8px;
             margin: 2px;
             border-radius: 4px;
-            text-align:center;
-            flex-basis:auto;
+            text-align: center;
+            flex-basis: auto;
             flex-grow: 1;
             flex-shrink: 1;
         }
@@ -109,12 +110,12 @@
             -moz-transition: max-height 0.8s ease-in-out;
         }
 
-        .noDisplay{
-            display:none
+        .noDisplay {
+            display: none
         }
-
     </style>
 </head>
+
 <body style="padding:0px;margin:0px;width:100vw;height:100vh">
     <div id="info" style="position:absolute;top:0px; left:0px"></div>
     <div id="controlPanel" class="controlPanel frostedGlass" data-collapsed="false">
@@ -131,7 +132,7 @@
 
             <!--閥值-->
             <div class="labelLayout">
-                <label for="isovalueSlider">閥值:0/0</label>
+                <label for="isovalueSlider" id="isolabel">閥值:0/0</label>
                 <input class="labelInput" id="isovalueSlider" type="range" name="settingForm" min=0 max=1000>
             </div>
 
@@ -139,9 +140,9 @@
             <div class="labelLayout">
                 <label>Texture:</label>
                 <select class="labelInput" name="settingForm">
-                    <option value=0 selected>MeshNormalMaterial</option>
-                    <option value=1>MeshToonMaterial</option>
-                    <option value=2>MeshLambertMaterial</option>
+                    <option value=0 selected>MeshPhongMaterial</option>
+                    <option value=1>MeshNormalMaterial</option>
+                    <option value=2>MeshToonMaterial</option>
                 </select>
             </div>
 
@@ -208,10 +209,10 @@
     <script type="module">
 
         import { threejsViewer } from './jsm/threejsViewer.js'
-        import {PLYExporter } from './threejs/examples/jsm/exporters/PLYExporter.js'
+        import { PLYExporter } from './threejs/examples/jsm/exporters/PLYExporter.js'
         import { STLExporter } from "./threejs/examples/jsm/exporters/STLExporter.js";
 
-        const fileRegex = /(\w+)_(\d+)x(\d+)x(\d+)_(\w+)\.*/;
+        const fileRegex = /(\w+)_(\d+)_(\d+)_(\d+)_(\w+)\.*/;
 
         let modelView = new threejsViewer(document.body)// webgl畫布
 
