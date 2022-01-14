@@ -140,9 +140,9 @@
             <div class="labelLayout">
                 <label>Texture:</label>
                 <select class="labelInput" name="settingForm">
-                    <option value=0 selected>MeshPhongMaterial</option>
-                    <option value=1>MeshNormalMaterial</option>
-                    <option value=2>MeshToonMaterial</option>
+                    <option value=0 selected>MeshNormalMaterial</option>
+                    <option value=1>MeshToonMaterial</option>
+                    <option value=2>MeshLambertMaterial</option>
                 </select>
             </div>
 
@@ -302,15 +302,15 @@
                 let isovalue = evt.srcElement.value
 
                 document.getElementById("isolabel").innerText = '閥值設定:' + isovalue + '/' + isovalue
-                modelView.threshold = isovalue * 270/1000
+                modelView.threshold = isovalue * 270/1000 //0-1000
                 modelView.updateModel()
             })
 
             // 紋理設置
             elements[3].addEventListener('change', (evt) => {
-                let selectTextureIndex = evt.srcElement.value
-                modelView.textureOption = selectTextureIndex
-                console.log(selectTextureIndex)
+                let selectTexture = evt.srcElement.value
+                modelView.textureOption = selectTexture
+                console.log(selectTexture)
                 
                 modelView.updateModel()
             })
