@@ -1,4 +1,4 @@
-import * as THREE from "../threejs/build/three.module.js";
+import * as THREE from "../threejs/build/three.module.js"
 import { MarchingCubes } from '../threejs/examples/jsm/objects/MarchingCubes.js'
 import { OrbitControls } from '../threejs/examples/jsm/controls/OrbitControls.js'
 
@@ -31,14 +31,14 @@ class threejsViewer {
 
         // Light
         let directionalLight = new THREE.DirectionalLight(0xffffff, 1)
-        directionalLight.position.set(2, 1, 2)   
+        directionalLight.position.set(2, 1, 2)
         this.scene.add(directionalLight)
 
         // Controller
         let controller = new OrbitControls(this.camera, this.renderer.domElement)
         controller.target.set(0, 0.5, 0)
         controller.update()
-        
+
         //Axis Landmark
         const axesHelper = new THREE.AxesHelper(100)
         this.scene.add(axesHelper)
@@ -46,7 +46,7 @@ class threejsViewer {
         // Ground
         const plane = new THREE.Mesh(
             new THREE.CircleGeometry(2, 30),
-            new THREE.MeshPhongMaterial({ color: 0xbbddff, opacity:0.4, transparent: true })
+            new THREE.MeshNormalMaterial({ color: 0xbbddff, opacity: 0.4, transparent: true })
         );
         plane.rotation.x = - Math.PI / 2;
         this.scene.add(plane);
@@ -69,45 +69,54 @@ class threejsViewer {
             this.camera.updateProjectionMatrix();
         })
 
-        let mesh = null
-        this.loadData = (paddingData,size,isovalue) =>{
-            let mesh = new MarchingCubes(size)
-            mesh.material = new THREE.MeshLambertMaterial()
-            mesh.isolation = this.threshold
-            mesh.field = this.databuffer
-            //mesh.isolation = isovalue
-            //mesh.field = paddingData
-            this.scene.add(mesh)
-        }
+        this.mesh = null
 
-        this.updateModel = () =>{
-            //geometry + meterial =>mesh
-            let mesh = this.scence.getObjecByName('mesh')
+        this.updateModel = () => {
+            let mesh = this.scene.getObjectByName('mesh')
+            if (mesh == null || mesh == undefined) {
+                this.mesh = new MarchingCubes(this.size)
+                this.mesh.name = 'mesh'
 
-            if(mesh==null){
-                //初始化
-                let mesh = new MarchingCubes(this.size)
-                mesh.name = 'mesh'
+                if (this.textureOption == 0) {
+                    this.mesh.material = new THREE.MeshNormalMaterial({ color: 0xffff00 })
+                } else if (this.textureOption == 1) {
+                    this.mesh.material = new THREE.MeshToonMaterial({ color: 0xffff00 })
+                } else if (this.textureOption == 2) {
+                    this.mesh.material = new THREE.MeshLambertMaterial({ color: 0xffff00 })
+                } else if (this.textureOption == 3) {
+                    //this.mesh.material = new THREE.MeshNormalMaterial({ color: 0xffff00 })
+                }
+
+                this.mesh.isolation = this.threshold
+                this.mesh.field = this.databuffer
+                this.mesh.position.set(0, 1, 0)
                 
-                if (this.textureOption ==0){
-                    //mesh.material = ...
-                }
-                else if (this.textureOption ==1){
-                    //mesh.material = ...
-                }
+                this.scene.add(this.mesh)
 
+
+            }else{
+                if (this.textureOption == 0) {
+                    this.mesh.material = new THREE.MeshNormalMaterial({ color: 0xffff00 })
+                } else if (this.textureOption == 1) {
+                    this.mesh.material = new THREE.MeshToonMaterial({ color: 0xffff00 })
+                } else if (this.textureOption == 2) {
+                    this.mesh.material = new THREE.MeshLambertMaterial({ color: 0xffff00 })
+                } else if (this.textureOption == 3) {
+                    //this.mesh.material = new THREE.MeshNormalMaterial({ color: 0xffff00 })
+                }
                 mesh.isolation = this.threshold
                 mesh.field = this.databuffer
-
-                return mesh
+                mesh.position.set(0,0.5,0)
             }
-            
+
         }
 
-        this.dowload = () => {
-            mesh.generateGemetey()
+        this.download = () => {
+            let geometry = this.mesh.generateGeometry()
+            let mesh = new THREE.Mesh(geometry)
             return mesh
         }
+
 
         this.renderScene()
     }

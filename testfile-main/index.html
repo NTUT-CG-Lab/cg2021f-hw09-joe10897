@@ -139,8 +139,9 @@
             <div class="labelLayout">
                 <label>Texture:</label>
                 <select class="labelInput" name="settingForm">
-                    <option value=0 selected>option 1</option>
-                    <option value=1>option 2</option>
+                    <option value=0 selected>MeshNormalMaterial</option>
+                    <option value=1>MeshToonMaterial</option>
+                    <option value=2>MeshLambertMaterial</option>
                 </select>
             </div>
 
@@ -172,9 +173,9 @@
             //addChild 要比 renderModal 先呼叫
             so.addChild("讀取文件並顯示資訊", 4, true);
             so.addChild("生成模型", 2, true);
-            so.addChild("閥值控制", 1, false);
-            so.addChild("文件下載", 1, false);
-            so.addChild("材質更換", 2, false);
+            so.addChild("閥值控制", 1, true);
+            so.addChild("文件下載", 1, true);
+            so.addChild("材質更換", 2, true);
 
             //產生自評表，參數如下所示
             so.renderModal(
@@ -207,7 +208,7 @@
     <script type="module">
 
         import { threejsViewer } from './jsm/threejsViewer.js'
-        //import {PLYExporter } from ''
+        import {PLYExporter } from './threejs/examples/jsm/exporters/PLYExporter.js'
         import { STLExporter } from "./threejs/examples/jsm/exporters/STLExporter.js";
 
         const fileRegex = /(\w+)_(\d+)x(\d+)x(\d+)_(\w+)\.*/;
@@ -240,7 +241,6 @@
             // RAW文件讀取
             elements[0].addEventListener('change', (evt) => {
                 let fr = new FileReader()
-                
                 let files = evt.target.files
                 if (files.length <=0) {
                     return
@@ -263,14 +263,20 @@
                 let data = null
                 let paddingData = null
 
+                alert('讀取成功:width='+width+',heigh='+height+',depth='+depth+',byte='+byte)
+
                 fr.onload= () => {
                     let result = fr.result
                     if(byte == 'uint8'){
-                        data = new Uint8Array(result)
+                        //data = new Uint8Array(result)
+                        console.log(max) //texture show on console
                             //...//
-                        paddingData = new Uint8Array(max * max * max)
-
-                        modelView.loadData(paddingData,max,75)
+                        //paddingData = new Uint8Array(max * max * max)
+                        //modelView.loadData(paddingData,max,75)
+                        modelView.size=max
+                        modelView.threshold = 75
+                        modelView.databuffer=new Uint8Array(result)
+                        modelView.updateModel()
                     }
                 }
 
@@ -281,26 +287,31 @@
             elements[1].addEventListener('click', (evt) => {
                 let exporter = new STLExporter()
                 let mesh = modelView.download()
-
-
-                
+                let result = exporter.parse(mesh,{binary:true})
+                let blob = new Blob([result],{type:'application/octet-stream'}) //Binary large Object
                 let dlLink = document.createElement('a')
+
                 dlLink.href = URL.createObjectURL(blob)
                 dlLink.download = 'model.stl'
-
                 dlLink.click()
             })
 
             // 閥值設定
             elements[2].addEventListener('click', (evt) => {
                 let isovalue = evt.srcElement.value
-                modelView.threshold = isovalue
-                model
+
+                document.getElementById("isolabel").innerText = '閥值設定:' + isovalue + '/' + isovalue
+                modelView.threshold = isovalue * 270/1000
+                modelView.updateModel()
             })
 
             // 紋理設置
             elements[3].addEventListener('change', (evt) => {
-
+                let selectTextureIndex = evt.srcElement.value
+                modelView.textureOption = selectTextureIndex
+                console.log(selectTextureIndex)
+                
+                modelView.updateModel()
             })
 
             // 模型網格顯示
